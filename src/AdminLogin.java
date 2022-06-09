@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+
 
 public class AdminLogin {
     private JTextField welcomeToBookingThTextField;
@@ -11,13 +13,14 @@ public class AdminLogin {
     private JButton bookingOptionsButton;
     private JPanel PanelMain;
     private JButton userOptionsButton;
+    static Connection con1;
 
     public AdminLogin() {
         userOptionsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource()==userOptionsButton){
-                    adminNutzerOptions adminNutzerOptions1 = new adminNutzerOptions();
+                    adminNutzerOptions adminNutzerOptions1 = new adminNutzerOptions(con1);
                 }
             }
         });

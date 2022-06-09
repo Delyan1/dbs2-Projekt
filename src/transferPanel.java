@@ -17,39 +17,33 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class transferPanel {
+public class    transferPanel {
     private JPanel transferPanel;
     private JTextField textField1;
     private JTextField textField2;
     private JTextField textField3;
     private JButton acceptButton;
 
-    transferPanel(){
 
+
+    transferPanel(){
         JFrame frame = new JFrame("Transfer Panel");
         frame.add(transferPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-        String mitarbeiterId = textField1.getText();
-        String newhotelID = textField2.getText();
-        String oldhotelID = textField3.getText();
+        final String[] mIDnhIDohID= new String[3];
 
 
         acceptButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource()==acceptButton){
-                    try{
-                        Class.forName("oracle.jdbc.driver.OracleDriver");
-
-                        Connection con = DriverManager.getConnection( "jdbc:oracle:thin:@StudiDB.GM.TH-Koeln.de:1521:vlesung","inf1300", "wirbestehen195");
-                        con.close();
-
-                    }
-                    catch(Exception a){ System.out.println(e);}
-
-
+                    mIDnhIDohID[0] = textField1.getText();
+                    mIDnhIDohID[1] = textField2.getText();
+                    mIDnhIDohID[2] = textField3.getText();
+                    Connection c = DatabaseController.getInstance().getConnectionOrNull("jdbc:oracle:thin:@StudiDB.GM.TH-Koeln.de:1521:vlesung");
+                    DatabaseController.transfer(c, Integer.parseInt(mIDnhIDohID[0]),Integer.parseInt(mIDnhIDohID[1]),Integer.parseInt(mIDnhIDohID[2]));
 
                 }
             }
