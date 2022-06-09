@@ -20,7 +20,7 @@ public class DatabaseController {
         return con;
     }
 
-    public boolean Delete(Connection connection, String Tablename, String Condition){
+    public static boolean Delete(Connection connection, String Tablename, String Condition){
         try{
             PreparedStatement st = connection.prepareStatement("DELETE FROM " + Tablename + " WHERE " + Condition);
             st.executeUpdate();
@@ -31,7 +31,7 @@ public class DatabaseController {
         return true;
     }
 
-    public boolean Insert(Connection connection, String Tablename, Object... values) {
+    public static boolean Insert(Connection connection, String Tablename, Object... values) {
         String valueString = createValueString(values);
         try{
             PreparedStatement st = connection.prepareStatement("INSERT INTO " + Tablename + " " + valueString);
@@ -43,7 +43,7 @@ public class DatabaseController {
         return true;
     }
 
-    public String createValueString(Object... values){
+    public static String createValueString(Object... values){
         StringBuilder valuestring = new StringBuilder("VALUES(");
         for(Object a: Arrays.stream(values).toArray()){
             if(a instanceof String && !((String) a).startsWith("TO_DATE")) {
@@ -59,7 +59,7 @@ public class DatabaseController {
         return valuestring.toString();
     }
 
-    public String currentClients(Connection connection){
+    public static String currentClients(Connection connection){
         String output = "";
         try{
             CallableStatement callableStatement = connection.prepareCall("call KUNDEANREISE(?)");
@@ -70,5 +70,9 @@ public class DatabaseController {
             System.out.println("\u001B[31m" + e + "\u001B[0m");
         }
         return output;
+    }
+
+    public static void transfer(Connection connection, int User_ID, int Hotel_ID_from, int Hotel_ID_to){
+
     }
 }
