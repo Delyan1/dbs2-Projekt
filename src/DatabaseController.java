@@ -11,7 +11,6 @@ public class DatabaseController {
     private Connection con = null;
 
     private DatabaseController(){
-        getConnectionOrNull("jdbc:oracle:thin:@StudiDB.GM.TH-Koeln.de:1521:vlesung");
     }
 
     public static DatabaseController getInstance(){
@@ -45,6 +44,9 @@ public class DatabaseController {
         }
         return true;
     }
+    public boolean Delete(String Tablename, String Condition){
+        return Delete(con, Tablename, Condition);
+    }
 
     public static boolean Insert(Connection connection, String Tablename, Object... values) {
         String valueString = createValueString(values);
@@ -56,6 +58,10 @@ public class DatabaseController {
             return false;
         }
         return true;
+    }
+
+    public boolean Insert(String Tablename, Object... values) {
+        return Insert(con, Tablename, values);
     }
 
     public static String createValueString(Object... values){
@@ -87,6 +93,10 @@ public class DatabaseController {
         return output;
     }
 
+    public String currentClients(){
+        return currentClients(con);
+    }
+
     public static void transfer(Connection connection, int User_ID, int Hotel_ID_from, int Hotel_ID_to){
         try{
             CallableStatement callableStatement = connection.prepareCall("call TRANSFER(?, ?, ?)");
@@ -98,11 +108,14 @@ public class DatabaseController {
             System.out.println("\u001B[31m" + e + "\u001B[0m");
         }
     }
+    public void transfer( int User_ID, int Hotel_ID_from, int Hotel_ID_to){
+        transfer(con, User_ID, Hotel_ID_from, Hotel_ID_to);
+    }
 
     public static float averageAge(Connection connection){
         float res = 0f;
         try{
-            CallableStatement callableStatement = connection.prepareCall("call AVERAGE_AGE()");
+            CallableStatement callableStatement = connection.prepareCall("{? = call AVERAGE_AGE()}");
             callableStatement.registerOutParameter(1, Types.FLOAT);
             callableStatement.executeUpdate();
             res = callableStatement.getFloat(1);
@@ -110,5 +123,36 @@ public class DatabaseController {
             System.out.println("\u001B[31m" + e + "\u001B[0m");
         }
         return res;
+    }
+
+    public float averageAge(){
+        return averageAge(con);
+    }
+
+    public static float income(Connection connection, int Hotel_ID){
+        float res = 0f;
+        try{
+            CallableStatement callableStatement = connection.prepareCall("{? = call EINNAHME()}");
+            callableStatement.registerOutParameter(1, Types.NUMERIC);
+            callableStatement.executeUpdate();
+            res = callableStatement.getFloat(1);
+        }catch(Exception e){
+            System.out.println("\u001B[31m" + e + "\u001B[0m");
+        }
+        return res;
+    }
+    public float income(int Hotel_ID){
+        return income(con, Hotel_ID);
+    }
+
+
+
+    public void Close(){
+        try{
+            con.close();
+        }catch(Exception e){
+            System.out.println("\u001B[31m" + e + "\u001B[0m");
+        }
+        con = null;
     }
 }

@@ -23,6 +23,14 @@ class OracleCon{
             return;
         }
 
+        try{
+            Statement stmt=con.createStatement();
+            ResultSet rs2=stmt.executeQuery("select * from HOTELMITARBEITER");
+            while(rs2.next())
+                System.out.println(rs2.getInt(1)+" "+rs2.getString(2)+" "+rs2.getString(3)+" "+rs2.getString(4)+" "+rs2.getString(5)+" "+rs2.getString(6)+" "+rs2.getString(7));
+
+        }catch (Exception e){}
+
         printStatus(DatabaseController.Delete(con,"BUCHUNG", "NUTZER_ID = 55"));
         printStatus(DatabaseController.Delete(con, "KUNDE", "NUTZER_ID = 55"));
         printStatus(DatabaseController.Delete(con, "NUTZER", "NUTZER_ID = 55"));
@@ -34,25 +42,13 @@ class OracleCon{
 
         try{
             Statement stmt=con.createStatement();
-           //Ausgeben
-            ResultSet rs=stmt.executeQuery("SELECT * FROM nutzer");
-            while(rs.next())
-                System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3)+"  "+rs.getString(4));
-
-        /*  FUNKTION TRANSFER TEST
-            CallableStatement cstmt = con.prepareCall("call transfer(11,30,20)");
-            cstmt.executeUpdate();
-        */
-
-            ResultSet rs2=stmt.executeQuery("select * from kunde");
+            ResultSet rs2=stmt.executeQuery("select * from HOTELMITARBEITER");
             while(rs2.next())
                 System.out.println(rs2.getInt(1)+" "+rs2.getString(2)+" "+rs2.getString(3)+" "+rs2.getString(4)+" "+rs2.getString(5)+" "+rs2.getString(6)+" "+rs2.getString(7));
 
-            con.close();
-        }
-        catch(Exception e){
-            System.out.println(e);
-        }
+        }catch (Exception e){}
+
+        DatabaseController.getInstance().Close();
     }
 
     static void printStatus(boolean success){
