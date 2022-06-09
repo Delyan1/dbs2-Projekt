@@ -10,7 +10,9 @@ public class DatabaseController {
     private static final DatabaseController dbc = new DatabaseController();
     private Connection con = null;
 
-    private DatabaseController(){}
+    private DatabaseController(){
+        getConnectionOrNull("jdbc:oracle:thin:@StudiDB.GM.TH-Koeln.de:1521:vlesung");
+    }
 
     public static DatabaseController getInstance(){
         return dbc;
@@ -27,6 +29,9 @@ public class DatabaseController {
                 con = null;
             }
         }
+        return con;
+    }
+    public Connection getConnectionOrNull() {
         return con;
     }
 
