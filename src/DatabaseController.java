@@ -73,6 +73,14 @@ public class DatabaseController {
     }
 
     public static void transfer(Connection connection, int User_ID, int Hotel_ID_from, int Hotel_ID_to){
-
+        try{
+            CallableStatement callableStatement = connection.prepareCall("call TRANSFER(?, ?, ?)");
+            callableStatement.setInt(1,User_ID);
+            callableStatement.setInt(2, Hotel_ID_to);
+            callableStatement.setInt(3, Hotel_ID_from);
+            callableStatement.executeUpdate();
+        }catch(Exception e){
+            System.out.println("\u001B[31m" + e + "\u001B[0m");
+        }
     }
 }
