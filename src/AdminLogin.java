@@ -29,6 +29,38 @@ public class AdminLogin {
                 }
             }
         });
+        hotelOptionsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource()== hotelOptionsButton){
+                    adminHotelOptions adminHotelOptions1 = new adminHotelOptions();
+                }
+            }
+        });
+        clientOptionsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource()==clientOptionsButton){
+                    adminHotelManagerOptions clientAdminOptions1 = new adminHotelManagerOptions();
+                }
+            }
+        });
+        managerOptionsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource()== managerOptionsButton){
+                    hotelManagerOptions hotelManagerOptions1= new hotelManagerOptions();
+                }
+            }
+        });
+        bookingOptionsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource()==bookingOptionsButton){
+                    adminBookingOptions adminBookingOptions1 = new adminBookingOptions();
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {

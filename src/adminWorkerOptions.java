@@ -9,7 +9,7 @@ public class adminWorkerOptions {
 
     adminWorkerOptions(){
 
-        JFrame frame = new JFrame("User Options");
+        JFrame frame = new JFrame("Worker Options");
         frame.add(workersPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();

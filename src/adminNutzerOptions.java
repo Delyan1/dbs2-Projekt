@@ -1,7 +1,6 @@
 import javax.swing.*;
 
 public class adminNutzerOptions {
-    private JTextField userOptionsTextField;
     private JPanel useroptionspanel;
     private JButton deleteUserButton;
     private JButton addUserButton;
