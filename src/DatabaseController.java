@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class DatabaseController {
     public Connection getConnectionOrNull(String URL) {
@@ -11,6 +12,7 @@ public class DatabaseController {
         try{
             Class.forName("oracle.jdbc.driver.OracleDriver");
             con = DriverManager.getConnection( URL,"inf1300", "wirbestehen195");
+            con.setAutoCommit(true);
         } catch (Exception e) {
             System.out.println("\u001B[31m" + e + "\u001B[0m");
             con = null;
@@ -30,8 +32,9 @@ public class DatabaseController {
     }
 
     public boolean Insert(Connection connection, String Tablename, Object... values) {
+        String valueString = createValueString(values);
         try{
-            PreparedStatement st = connection.prepareStatement("INSERT INTO " + Tablename + " " + createValueString(values));
+            PreparedStatement st = connection.prepareStatement("INSERT INTO " + Tablename + " " + valueString);
             st.executeUpdate();
         }catch(Exception e){
             System.out.println("\u001B[31m" + e + "\u001B[0m");
@@ -43,7 +46,7 @@ public class DatabaseController {
     public String createValueString(Object... values){
         StringBuilder valuestring = new StringBuilder("VALUES(");
         for(Object a: Arrays.stream(values).toArray()){
-            if(a instanceof String) {
+            if(a instanceof String && !((String) a).startsWith("TO_DATE")) {
                 valuestring.append("'" + a + "'");
             }
             else{
@@ -54,5 +57,18 @@ public class DatabaseController {
         valuestring.delete(valuestring.length()-2, valuestring.length()-1);
         valuestring.append(")");
         return valuestring.toString();
+    }
+
+    public String currentClients(Connection connection){
+        String output = "";
+        try{
+            CallableStatement callableStatement = connection.prepareCall("call KUNDEANREISE(?)");
+            callableStatement.registerOutParameter(1, Types.VARCHAR);
+            callableStatement.executeUpdate();
+            output = callableStatement.getString(1);
+        }catch(Exception e){
+            System.out.println("\u001B[31m" + e + "\u001B[0m");
+        }
+        return output;
     }
 }
