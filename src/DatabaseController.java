@@ -7,15 +7,25 @@ import java.util.Arrays;
 import java.util.Locale;
 
 public class DatabaseController {
+    private static final DatabaseController dbc = new DatabaseController();
+    private Connection con = null;
+
+    private DatabaseController(){}
+
+    public static DatabaseController getInstance(){
+        return dbc;
+    }
+
     public Connection getConnectionOrNull(String URL) {
-        Connection con;
-        try{
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-            con = DriverManager.getConnection( URL,"inf1300", "wirbestehen195");
-            con.setAutoCommit(true);
-        } catch (Exception e) {
-            System.out.println("\u001B[31m" + e + "\u001B[0m");
-            con = null;
+        if(con == null){
+            try{
+                Class.forName("oracle.jdbc.driver.OracleDriver");
+                con = DriverManager.getConnection( URL,"inf1300", "wirbestehen195");
+                con.setAutoCommit(true);
+            } catch (Exception e) {
+                System.out.println("\u001B[31m" + e + "\u001B[0m");
+                con = null;
+            }
         }
         return con;
     }
@@ -73,6 +83,27 @@ public class DatabaseController {
     }
 
     public static void transfer(Connection connection, int User_ID, int Hotel_ID_from, int Hotel_ID_to){
+        try{
+            CallableStatement callableStatement = connection.prepareCall("call TRANSFER(?, ?, ?)");
+            callableStatement.setInt(1,User_ID);
+            callableStatement.setInt(2, Hotel_ID_to);
+            callableStatement.setInt(3, Hotel_ID_from);
+            callableStatement.executeUpdate();
+        }catch(Exception e){
+            System.out.println("\u001B[31m" + e + "\u001B[0m");
+        }
+    }
 
+    public static float averageAge(Connection connection){
+        float res = 0f;
+        try{
+            CallableStatement callableStatement = connection.prepareCall("call AVERAGE_AGE()");
+            callableStatement.registerOutParameter(1, Types.FLOAT);
+            callableStatement.executeUpdate();
+            res = callableStatement.getFloat(1);
+        }catch(Exception e){
+            System.out.println("\u001B[31m" + e + "\u001B[0m");
+        }
+        return res;
     }
 }
