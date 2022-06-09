@@ -13,23 +13,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+
 class OracleCon{
 
     public static void main(String args[]) {
-        DatabaseController dbc = new DatabaseController();
-        Connection con = dbc.getConnectionOrNull("jdbc:oracle:thin:@StudiDB.GM.TH-Koeln.de:1521:vlesung");
+        Connection con = DatabaseController.getInstance().getConnectionOrNull("jdbc:oracle:thin:@StudiDB.GM.TH-Koeln.de:1521:vlesung");
         if(con == null){
             System.out.println("connection failed");
             return;
         }
 
-        printStatus(dbc.Delete(con,"BUCHUNG", "NUTZER_ID = 55"));
-        printStatus(dbc.Delete(con, "KUNDE", "NUTZER_ID = 55"));
-        printStatus(dbc.Delete(con, "NUTZER", "NUTZER_ID = 55"));
-        printStatus(dbc.Insert(con, "NUTZER(NUTZER_ID)", 55));
-        printStatus(dbc.Insert(con, "KUNDE", 55, "password1", "testmann@gmail.com", "Manuel", "Testmann", "TO_DATE('1996/07/09', 'yyyy/mm/dd')", 1));
-        printStatus(dbc.Insert(con,"BUCHUNG", 4, 55, "TO_DATE('2014/08/14', 'yyyy/mm/dd')", "TO_DATE('2014/09/04', 'yyyy/mm/dd')"));
-        System.out.println(dbc.currentClients(con));
+        printStatus(DatabaseController.Delete(con,"BUCHUNG", "NUTZER_ID = 55"));
+        printStatus(DatabaseController.Delete(con, "KUNDE", "NUTZER_ID = 55"));
+        printStatus(DatabaseController.Delete(con, "NUTZER", "NUTZER_ID = 55"));
+        printStatus(DatabaseController.Insert(con, "NUTZER(NUTZER_ID)", 55));
+        printStatus(DatabaseController.Insert(con, "KUNDE", 55, "password1", "testmann@gmail.com", "Manuel", "Testmann", "TO_DATE('1996/07/09', 'yyyy/mm/dd')", 1));
+        printStatus(DatabaseController.Insert(con,"BUCHUNG", 4, 55, "TO_DATE('2014/08/14', 'yyyy/mm/dd')", "TO_DATE('2014/09/04', 'yyyy/mm/dd')"));
+        System.out.println(DatabaseController.currentClients(con));
+        System.out.println(DatabaseController.averageAge(con));
 
         try{
             Statement stmt=con.createStatement();
