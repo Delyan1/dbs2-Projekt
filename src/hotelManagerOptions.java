@@ -9,7 +9,7 @@ public class hotelManagerOptions {
 
         JFrame frame = new JFrame("Hotel Manager Options");
         frame.add(hotelManagerPAnel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }

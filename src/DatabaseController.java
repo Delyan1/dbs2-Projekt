@@ -8,6 +8,7 @@ import java.util.Locale;
 
 public class DatabaseController {
     private static final DatabaseController dbc = new DatabaseController();
+    private String connectionURL = null;
     private Connection con = null;
 
     private DatabaseController(){
@@ -18,6 +19,7 @@ public class DatabaseController {
     }
 
     public Connection getConnectionOrNull(String URL) {
+        connectionURL = URL;
         if(con == null){
             try{
                 Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -32,6 +34,13 @@ public class DatabaseController {
     }
     public Connection getConnectionOrNull() {
         return con;
+    }
+
+    public boolean retryConnection(){
+        if(connectionURL == null){
+            return false;
+        }
+        return getConnectionOrNull(connectionURL) != null;
     }
 
     public static boolean Delete(Connection connection, String Tablename, String Condition){
@@ -69,6 +78,9 @@ public class DatabaseController {
         for(Object a: Arrays.stream(values).toArray()){
             if(a instanceof String && !((String) a).startsWith("TO_DATE")) {
                 valuestring.append("'" + a + "'");
+            }
+            else if( a == null){
+                valuestring.append("NULL");
             }
             else{
                 valuestring.append(a);

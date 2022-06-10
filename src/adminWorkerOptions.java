@@ -33,7 +33,7 @@ public class adminWorkerOptions {
 
         JFrame frame = new JFrame("Worker Options");
         frame.add(workersPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
         transferWorkerButton.addActionListener(new ActionListener() {

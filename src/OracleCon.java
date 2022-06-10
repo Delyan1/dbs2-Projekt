@@ -1,54 +1,23 @@
+import javax.swing.*;
+import java.awt.*;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.*;
-import java.sql.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Properties;
 
 
 class OracleCon{
 
     public static void main(String args[]) {
-        Connection con = DatabaseController.getInstance().getConnectionOrNull("jdbc:oracle:thin:@StudiDB.GM.TH-Koeln.de:1521:vlesung");
-        if(con == null){
-            System.out.println("connection failed");
-            return;
-        }
+        //DatabaseController.getInstance().getConnectionOrNull("jdbc:oracle:thin:@StudiDB.GM.TH-Koeln.de:1521:vlesung");
 
-        try{
-            Statement stmt=con.createStatement();
-            ResultSet rs2=stmt.executeQuery("select * from HOTELMITARBEITER");
-            while(rs2.next())
-                System.out.println(rs2.getInt(1)+" "+rs2.getString(2)+" "+rs2.getString(3)+" "+rs2.getString(4)+" "+rs2.getString(5)+" "+rs2.getString(6)+" "+rs2.getString(7));
+        JFrame frame = new JFrame("App");
+        frame.setContentPane(Menu());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
 
-        }catch (Exception e){}
-
-        printStatus(DatabaseController.Delete(con,"BUCHUNG", "NUTZER_ID = 55"));
-        printStatus(DatabaseController.Delete(con, "KUNDE", "NUTZER_ID = 55"));
-        printStatus(DatabaseController.Delete(con, "NUTZER", "NUTZER_ID = 55"));
-        printStatus(DatabaseController.Insert(con, "NUTZER(NUTZER_ID)", 55));
-        printStatus(DatabaseController.Insert(con, "KUNDE", 55, "password1", "testmann@gmail.com", "Manuel", "Testmann", "TO_DATE('1996/07/09', 'yyyy/mm/dd')", 1));
-        printStatus(DatabaseController.Insert(con,"BUCHUNG", 4, 55, "TO_DATE('2014/08/14', 'yyyy/mm/dd')", "TO_DATE('2014/09/04', 'yyyy/mm/dd')"));
-        System.out.println(DatabaseController.currentClients(con));
-        System.out.println(DatabaseController.averageAge(con));
-
-        try{
-            Statement stmt=con.createStatement();
-            ResultSet rs2=stmt.executeQuery("select * from HOTELMITARBEITER");
-            while(rs2.next())
-                System.out.println(rs2.getInt(1)+" "+rs2.getString(2)+" "+rs2.getString(3)+" "+rs2.getString(4)+" "+rs2.getString(5)+" "+rs2.getString(6)+" "+rs2.getString(7));
-
-        }catch (Exception e){}
-
-        DatabaseController.getInstance().Close();
+        //DatabaseController.getInstance().Close();
     }
 
     static void printStatus(boolean success){
@@ -58,6 +27,47 @@ class OracleCon{
         else{
             System.out.println("Operation failed");
         }
+    }
+
+    static JPanel Menu(){
+        JPanel window = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weighty = 0.1;
+        c.gridx = 0;
+        c.gridy = 0;
+        window.add(new Label("Welcome to Booking.TH"), c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weighty = 0.2;
+        c.gridx = 0;
+        c.gridy = 1;
+        window.add(new Button("Client Options"),c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weighty = 0.2;
+        c.gridx = 0;
+        c.gridy = 2;
+        window.add(new Button("Hotel Options"),c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weighty = 0.2;
+        c.gridx = 0;
+        c.gridy = 3;
+        window.add(new Button("Worker Options"),c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weighty = 0.2;
+        c.gridx = 0;
+        c.gridy = 4;
+        window.add(new Button("Manager Options"),c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weighty = 0.2;
+        c.gridx = 0;
+        c.gridy = 5;
+        window.add(new Button("User Options"),c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weighty = 0.2;
+        c.gridx = 0;
+        c.gridy = 6;
+        window.add(new Button("Booking Options"),c);
+        return window;
     }
 }
 

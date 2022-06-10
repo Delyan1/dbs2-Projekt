@@ -1,11 +1,10 @@
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.sql.Connection;
 
 
 public class AdminLogin {
-    private JTextField welcomeToBookingThTextField;
     private JButton managerOptionsButton;
     private JButton workerOptionsButton;
     private JButton clientOptionsButton;
@@ -13,14 +12,13 @@ public class AdminLogin {
     private JButton bookingOptionsButton;
     private JPanel PanelMain;
     private JButton userOptionsButton;
-    static Connection con1;
 
-    public AdminLogin() {
+    public AdminLogin(JFrame frame) {
         userOptionsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource()==userOptionsButton){
-                    adminNutzerOptions adminNutzerOptions1 = new adminNutzerOptions(con1);
+                    adminNutzerOptions adminNutzerOptions1 = new adminNutzerOptions();
                 }
             }
         });
@@ -67,10 +65,42 @@ public class AdminLogin {
     }
 
     public static void main(String[] args) {
+        DatabaseController.getInstance().getConnectionOrNull("jdbc:oracle:thin:@StudiDB.GM.TH-Koeln.de:1521:vlesung");
         JFrame frame = new JFrame("App");
-        frame.setContentPane(new AdminLogin().PanelMain);
+        frame.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+            }
+            @Override
+            public void windowClosed(WindowEvent e) {
+                DatabaseController.getInstance().Close();
+            }
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        });
+        frame.setContentPane(new AdminLogin(frame).PanelMain);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
+        frame.setMinimumSize(new Dimension(300,300));
         frame.setVisible(true);
 
     }

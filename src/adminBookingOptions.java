@@ -10,7 +10,7 @@ public class adminBookingOptions {
 
         JFrame frame = new JFrame("User Options");
         frame.add(adminBookingPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }

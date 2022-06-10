@@ -10,7 +10,7 @@ public class adminHotelManagerOptions {
 
         JFrame frame = new JFrame("Client Options");
         frame.add(clientPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }

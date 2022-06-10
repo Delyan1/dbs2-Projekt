@@ -29,7 +29,7 @@ public class    transferPanel {
     transferPanel(){
         JFrame frame = new JFrame("Transfer Panel");
         frame.add(transferPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
         final String[] mIDnhIDohID= new String[3];
