@@ -18,7 +18,7 @@ public class AdminLogin {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource()==userOptionsButton){
-                    adminNutzerOptions adminNutzerOptions1 = new adminNutzerOptions();
+                    editUserPanel editUserPanel1 = new editUserPanel();
                 }
             }
         });
