@@ -1,5 +1,8 @@
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
@@ -11,7 +14,6 @@ import java.util.Objects;
 public class adminHotelOptions {
     private JButton removeHotelButton;
     private JButton addHotelButton;
-    private JButton changeHotelManagerButton;
     private JPanel hotelOptionsPanel;
     private JTable table1;
     private JButton refreshButton;
@@ -19,9 +21,8 @@ public class adminHotelOptions {
     private JTextField hotelnameTextField;
     private JTextField classTextField;
     private JTextField adressTextField;
-    private JTextField managerIDTextField2;
 
-    private int maxID = 0;
+    private boolean update = false;
 
     adminHotelOptions(){
 
@@ -50,24 +51,37 @@ public class adminHotelOptions {
         addHotelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!Objects.equals(managerIDTextField.getText(), "")){
-                    if(!Objects.equals(hotelnameTextField.getText(), "")){
-                        if (!Objects.equals(classTextField.getText(), "")) {
-                            if (!Objects.equals(adressTextField.getText(), "")) {
-                                Connection con = DatabaseController.getInstance().getConnectionOrNull();
-                                int id = 0;
-                                try(Statement stmt = con.createStatement()){
-                                    ResultSet rs = stmt.executeQuery("SELECT MAX(HOTEL_ID) MAX_ID FROM HOTEL");
-                                    if(rs.next()){
-                                        id = rs.getInt("MAX_ID") + 1;
+                if(addHotelButton.getText() == "Add Hotel"){
+                    if(!Objects.equals(managerIDTextField.getText(), "")){
+                        if(!Objects.equals(hotelnameTextField.getText(), "")){
+                            if (!Objects.equals(classTextField.getText(), "")) {
+                                if (!Objects.equals(adressTextField.getText(), "")) {
+                                    Connection con = DatabaseController.getInstance().getConnectionOrNull();
+                                    int id = 0;
+                                    try(Statement stmt = con.createStatement()){
+                                        ResultSet rs = stmt.executeQuery("SELECT MAX(HOTEL_ID) MAX_ID FROM HOTEL");
+                                        if(rs.next()){
+                                            id = rs.getInt("MAX_ID") + 1;
+                                        }
+                                    }catch(Exception ex){
+                                        System.out.println(ex);
                                     }
-                                }catch(Exception ex){
-                                    System.out.println(ex);
+                                    DatabaseController.getInstance().Insert("HOTEL", id, managerIDTextField.getText(), hotelnameTextField.getText(), classTextField.getText(), adressTextField.getText(), null, null);
                                 }
-                                DatabaseController.getInstance().Insert("HOTEL", id, managerIDTextField.getText(), hotelnameTextField.getText(), classTextField.getText(), adressTextField.getText(), null, null);
                             }
                         }
                     }
+
+                }
+                else{
+                    int ID = (int) table1.getModel().getValueAt(table1.getSelectedRow(), 0);
+                    ArrayList<String> arrayListColumns = new ArrayList<>();
+                    ArrayList<Object> arrayListValues = new ArrayList<>();
+                    if(!Objects.equals(managerIDTextField.getText(), "")){arrayListColumns.add("NUTZER_ID"); arrayListValues.add(Integer.parseInt(managerIDTextField.getText()));}
+                    if(!Objects.equals(hotelnameTextField.getText(), "")){arrayListColumns.add("HOTELNAME"); arrayListValues.add(hotelnameTextField.getText());}
+                    if (!Objects.equals(classTextField.getText(), "")) {arrayListColumns.add("KLASSE"); arrayListValues.add(Integer.parseInt(classTextField.getText()));}
+                    if (!Objects.equals(adressTextField.getText(), "")) {arrayListColumns.add("ADRESSE"); arrayListValues.add(adressTextField.getText());}
+                    DatabaseController.getInstance().Update("HOTEL", "HOTEL_ID = " + ID, arrayListColumns.toArray(new String[0]), arrayListValues.toArray());
                 }
                 refreshTable();
             }
@@ -141,7 +155,27 @@ public class adminHotelOptions {
                 "Price/Value"
         };
         Object[][] data = getTableData();
-        table1 = new JTable(data, names);
+        table1 = new JTable(data, names){
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            };
+        };;
         table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        ListSelectionModel selectionModel = table1.getSelectionModel();
+        selectionModel.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(table1.getSelectedRow() != -1){
+                    addHotelButton.setText("Update Hotel");
+                }
+                else{
+                    addHotelButton.setText("Add Hotel");
+                }
+                addHotelButton.invalidate();
+                addHotelButton.validate();
+                addHotelButton.repaint();
+            }
+        });
+
     }
 }
