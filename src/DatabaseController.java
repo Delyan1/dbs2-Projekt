@@ -73,23 +73,51 @@ public class DatabaseController {
         return Insert(con, Tablename, values);
     }
 
+
+    public boolean Update(Connection connection, String Tablename, String Condition,String[] columnnames, Object[] values){
+        StringBuilder statement = new StringBuilder("UPDATE " + Tablename + " SET ");
+        for(int i = 0; i < columnnames.length; i++){
+            statement.append(columnnames[i] + " = " + parseObject(values[i]) + ", ");
+        }
+        statement.delete(statement.length()-2, statement.length()-1);
+        statement.append(" WHERE " + Condition);
+        try{
+            PreparedStatement st = connection.prepareStatement(statement.toString());
+            st.executeUpdate();
+        }catch(Exception e){
+            System.out.println("\u001B[31m" + e + "\u001B[0m");
+            return false;
+        }
+        return true;
+
+    }
+    public boolean Update(String Tablename, String Condition, String[] columnnames, Object[] values){
+        return Update(con, Tablename, Condition, columnnames, values);
+    }
+
     public static String createValueString(Object... values){
         StringBuilder valuestring = new StringBuilder("VALUES(");
         for(Object a: Arrays.stream(values).toArray()){
-            if(a instanceof String && !((String) a).startsWith("TO_DATE")) {
-                valuestring.append("'" + a + "'");
-            }
-            else if( a == null){
-                valuestring.append("NULL");
-            }
-            else{
-                valuestring.append(a);
-            }
+            valuestring.append(parseObject(a));
             valuestring.append(", ");
         }
         valuestring.delete(valuestring.length()-2, valuestring.length()-1);
         valuestring.append(")");
         return valuestring.toString();
+    }
+
+    private static String parseObject(Object value){
+        String res = "";
+        if(value instanceof String && !((String) value).startsWith("TO_DATE")) {
+            res = "'" + value + "'";
+        }
+        else if( value == null){
+            res = "NULL";
+        }
+        else{
+            res = value.toString();
+        }
+        return res;
     }
 
     public static String currentClients(Connection connection){
